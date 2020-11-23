@@ -1,3 +1,4 @@
+import axios from 'axios'
 import React, {useState} from 'react';
 import {
   SafeAreaView,
@@ -8,18 +9,60 @@ import {
 } from 'react-native';
 
 import {CategorySelectModal} from '../components'
+import { CountdownCircleTimer } from 'react-native-countdown-circle-timer'
 
 import {introPage} from './styles';
 
 const Intro = (props) => {
+  const [counterFlag, setCounterFlag] = useState(false);
 
   const [modalFlag, setModalFlag] = useState(false);
+
+const startGame = (selectedCategory) => {
+  axios.get('https://opentdb.com/api.php?', {
+    params: {
+      amount: 10,
+      category: selectedCategory.id,
+      type: 'boolen'
+    },
+  })
+  .then (res=> {
+    console.log(res);
+  })
+  
+
+
+  setModalFlag(false)
+  setCounterFlag(true)
+}
+
+
   return (
     <SafeAreaView style={{flex: 1}}>
       <View style={{flex: 1}}>
 
         <View style={introPage.container}>
         <Text style={introPage.bannerText}>Trivial</Text>
+        </View>
+        <View style={{backgroundColor: '#3949ab', alignItems: 'center'}}>
+        <CountdownCircleTimer
+            isPlaying={counterFlag}
+            duration={5}
+            onComplete={() => props.navigation.navigate('Questions')}
+            colors={[
+              ['#fff176', 0.4],
+              ['#ba68c8', 0.4],
+              ['#ff8a65', 0.2],
+            ]}>
+            {({remainingTime, animatedColor}) => (
+              <Animated.Text style={{fontSize: 100, color: animatedColor}}>
+                {remainingTime}
+              </Animated.Text>
+            )}
+          </CountdownCircleTimer>
+
+
+
         </View>
 
         <View style={introPage.container}>
@@ -34,6 +77,7 @@ const Intro = (props) => {
         <CategorySelectModal 
         visibility={modalFlag} 
         onClose={() => setModalFlag(false)}
+        onCategorySelect={startGame}
         />
       </View>
     </SafeAreaView>

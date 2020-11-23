@@ -16,11 +16,16 @@ export const categoryModal = StyleSheet.create({
   },
   categoryItemContainer: {
     padding: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    
+    
   },
   categoryItemText: {
     fontSize: 20,
     fontWeight: 'bold',
     color: 'white',
+    marginLeft: 15, 
   },
 });
 
