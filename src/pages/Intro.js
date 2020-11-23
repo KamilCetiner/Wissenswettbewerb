@@ -9,34 +9,37 @@ import {
 } from 'react-native';
 
 import {CategorySelectModal} from '../components'
-import { CountdownCircleTimer } from 'react-native-countdown-circle-timer'
+import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
+import {useDispatch} from 'react-redux'
 
 import {introPage} from './styles';
 
 const Intro = (props) => {
   const [counterFlag, setCounterFlag] = useState(false);
-
   const [modalFlag, setModalFlag] = useState(false);
+  const dispatch = useDispatch();
 
 const startGame = (selectedCategory) => {
-  axios.get('https://opentdb.com/api.php?', {
-    params: {
-      amount: 10,
-      category: selectedCategory.id,
-      type: 'boolen'
-    },
-  })
-  .then (res=> {
-    console.log(res);
-  })
+  axios
+      .get(`https://opentdb.com/api.php?`, {
+        params: {
+          amount: 10,
+          category: selectedCategory.id,
+          type: 'boolean',
+        },
+      })
+      .then((response) => {
+        const {
+          data: {results: questions},
+        } = response;
+
+        dispatch({type: 'SET_QUESTIONS', payload: {questions}});
+      });
+
+    setModalFlag(false);
+    setCounterFlag(true);
+  };
   
-
-
-  setModalFlag(false)
-  setCounterFlag(true)
-}
-
-
   return (
     <SafeAreaView style={{flex: 1}}>
       <View style={{flex: 1}}>
@@ -47,7 +50,7 @@ const startGame = (selectedCategory) => {
         <View style={{backgroundColor: '#3949ab', alignItems: 'center'}}>
         <CountdownCircleTimer
             isPlaying={counterFlag}
-            duration={5}
+            duration={2}
             onComplete={() => props.navigation.navigate('Questions')}
             colors={[
               ['#fff176', 0.4],
