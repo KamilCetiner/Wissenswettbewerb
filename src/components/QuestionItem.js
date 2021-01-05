@@ -3,6 +3,8 @@ import {View, Text, TouchableOpacity} from 'react-native';
 
 import {questionItem} from './styles';
 
+
+
 const QuestionItem = (props) => { 
   return (
     <View style={questionItem.container}>
